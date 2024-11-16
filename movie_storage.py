@@ -46,6 +46,9 @@ def delete_movie(title):
     if title in movies:
         del movies[title]
         save_movies(movies)
+        print(f"'{title}' has been deleted from the movie list.")
+    else:
+        print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
 
 
 def update_movie(title, rating):
