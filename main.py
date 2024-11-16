@@ -117,37 +117,27 @@ def stats(movies):
         print("The Database is empty.")
         return
 
-    ratings = list(movies.values())
+    ratings = [movie["rating"] for movie in movies.values()]
     num_movies = len(movies)
-
-    # Average Rating
     average_rating = sum(ratings) / num_movies
-
-    # Median Rating
     sorted_ratings = sorted(ratings)
-    if num_movies % 2 == 0:
-        median_rating = (sorted_ratings[num_movies // 2 - 1] + sorted_ratings[num_movies // 2]) / 2
-    else:
-        median_rating = sorted_ratings[num_movies // 2]
-
-    # Max and min Rating
+    median_rating = sorted_ratings[num_movies // 2] if num_movies % 2 != 0 else (sorted_ratings[num_movies // 2 - 1] + sorted_ratings[num_movies // 2]) / 2
     max_rating = max(ratings)
     min_rating = min(ratings)
-    best_movies = [movie for movie, rating in movies.items() if rating == max_rating]
-    worst_movies = [movie for movie, rating in movies.items() if rating == min_rating]
 
-    # Display statistics
     print(f"Number of movies: {num_movies}")
     print(f"Average rating: {average_rating:.2f}")
     print(f"Median rating: {median_rating:.2f}")
 
     print("\nBest movie(s):")
-    for movie in best_movies:
-        print(f"- {movie} ({movies[movie]})")
+    for movie in movies.values():
+        if movie["rating"] == max_rating:
+            print(f"- {movie['title']} ({movie['year']}): {movie['rating']}")
 
     print("\nWorst movie(s):")
-    for movie in worst_movies:
-        print(f"- {movie} ({movies[movie]})")
+    for movie in movies.values():
+        if movie["rating"] == min_rating:
+            print(f"- {movie['title']} ({movie['year']}): {movie['rating']}")
 
 # Select and display a random movie and its rating from the database.
 def random_movie_and_rating(movies):
