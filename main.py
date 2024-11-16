@@ -95,21 +95,21 @@ def delete_movie(movies):
 
 # Update the rating of an existing movie in the database.
 def update_movie(movies):
-    upd_movie = input(f"{Fore.GREEN}Enter movie name:{Fore.RESET} ")
-    if upd_movie in movies:
+    title = input(f"{Fore.GREEN}Enter movie title:{Fore.RESET} ")
+    if title in movies:
         while True:
             try:
-                upd_rating = float(input(f"{Fore.GREEN}Enter new movie rating (0-10):{Fore.RESET} "))
-                if 0 <= upd_rating <= 10:
-                    movies[upd_movie] = upd_rating
-                    print(f"'{upd_movie}' has been updated with a new rating of {upd_rating}")
+                rating = float(input(f"{Fore.GREEN}Enter new movie rating (0-10):{Fore.RESET} "))
+                if 0 <= rating <= 10:
+                    movies[title]["rating"] = rating
+                    print(f"'{title}' has been updated with a new rating of {rating}")
                     return
                 else:
-                    print("Rating must be between 0 and 10.")
+                    print(f"{Fore.RED}Rating must be between 0 and 10.{Fore.RESET}")
             except ValueError:
                 print(f"{Fore.RED}Please enter a valid number for the rating.{Fore.RESET}")
     else:
-        print(f"{Fore.RED}Error: Movie '{upd_movie}' doesn't exist in the list.{Fore.RESET}")
+        print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
 
 # This function calculates and displays various statistics about the movie
 def stats(movies):
