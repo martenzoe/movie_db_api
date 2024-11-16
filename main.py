@@ -65,23 +65,24 @@ def display_menu():
 # Display all movies and their ratings in the database.
 def list_movies(movies):
     print("\nMovie List:")
-    for movie, rating in movies.items():
-        print(f"{movie}: {rating}")
+    for movie in movies.values():
+        print(f"{movie['title']} ({movie['year']}): {movie['rating']}")
 
 # Add a new movie to the database with a rating.
 def add_movie(movies):
-    new_movie = input(f"{Fore.GREEN}Enter new movie name:{Fore.RESET} ")
-    while True: # Creates an endless loop until user input is correct
-        try: # We catch value errors with try and except
-            new_rating = float(input(f"{Fore.GREEN}Enter new movie rating (0-10):{Fore.RESET} "))
-            if 0 <= new_rating <= 10:
-                movies[new_movie] = new_rating
-                print(f"'{new_movie}' has been added with a rating of {new_rating}")
+    title = input(f"{Fore.GREEN}Enter new movie title:{Fore.RESET} ")
+    while True:
+        try:
+            rating = float(input(f"{Fore.GREEN}Enter movie rating (0-10):{Fore.RESET} "))
+            year = int(input(f"{Fore.GREEN}Enter release year:{Fore.RESET} "))
+            if 0 <= rating <= 10 and 1800 <= year <= 2100:
+                movies[title] = {"title": title, "rating": rating, "year": year}
+                print(f"'{title}' ({year}) has been added with a rating of {rating}")
                 return
             else:
-                print(f"{Fore.RED}Rating must be between 0 and 10.{Fore.RESET}")
+                print(f"{Fore.RED}Invalid rating or year. Please try again.{Fore.RESET}")
         except ValueError:
-            print(f"{Fore.RED}Please enter a valid number for the rating.{Fore.RESET}")
+            print(f"{Fore.RED}Please enter valid numbers for rating and year.{Fore.RESET}")
 
 # Delete a movie from the database.
 def delete_movie(movies):
@@ -221,16 +222,56 @@ def exit_program(movies):
 def main():
     # Dictionary to store the movies and the rating
     movies = {
-        "The Shawshank Redemption": 9.5,
-        "Pulp Fiction": 8.8,
-        "The Room": 3.6,
-        "The Godfather": 9.2,
-        "The Godfather: Part II": 9.0,
-        "The Dark Knight": 9.0,
-        "12 Angry Men": 8.9,
-        "Everything Everywhere All At Once": 8.9,
-        "Forrest Gump": 8.8,
-        "Star Wars: Episode V": 8.7
+        "The Shawshank Redemption": {
+            "title": "The Shawshank Redemption",
+            "rating": 9.5,
+            "year": 1994
+        },
+        "Pulp Fiction": {
+            "title": "Pulp Fiction",
+            "rating": 8.8,
+            "year": 1994
+        },
+        "The Room": {
+            "title": "The Room",
+            "rating": 3.6,
+            "year": 2003
+        },
+        "The Godfather": {
+            "title": "The Godfather",
+            "rating": 9.2,
+            "year": 1972
+        },
+        "The Godfather: Part II": {
+            "title": "The Godfather: Part II",
+            "rating": 9.0,
+            "year": 1974
+        },
+        "The Dark Knight": {
+            "title": "The Dark Knight",
+            "rating": 9.0,
+            "year": 2008
+        },
+        "12 Angry Men": {
+            "title": "12 Angry Men",
+            "rating": 8.9,
+            "year": 1957
+        },
+        "Everything Everywhere All At Once": {
+            "title": "Everything Everywhere All At Once",
+            "rating": 8.9,
+            "year": 2022
+        },
+        "Forrest Gump": {
+            "title": "Forrest Gump",
+            "rating": 8.8,
+            "year": 1994
+        },
+        "Star Wars: Episode V": {
+            "title": "Star Wars: Episode V - The Empire Strikes Back",
+            "rating": 8.7,
+            "year": 1980
+        }
     }
 
     # Dictionary mapping menu choices to functions
