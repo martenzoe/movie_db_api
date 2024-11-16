@@ -12,6 +12,7 @@ Date: 25.10.2024
 Version: 1.0
 """
 
+import movie_storage
 import random
 import matplotlib.pyplot as plt
 from thefuzz import fuzz
@@ -42,56 +43,53 @@ def display_menu():
     print(Fore.RESET)
 
 
-def list_movies(movies):
-    """Display all movies and their ratings."""
+def list_movies():
+    movies = movie_storage.get_movies()
     print("\nMovie List:")
-    for movie in movies.values():
-        print(f"{movie['title']} ({movie['year']}): {movie['rating']}")
+    for title, movie in movies.items():
+        print(f"{title} ({movie['year']}): {movie['rating']}")
 
 
-def add_movie(movies):
-    """Add a new movie to the database with a rating."""
+def add_movie():
     title = input(f"{Fore.GREEN}Enter new movie title:{Fore.RESET} ")
     while True:
         try:
             rating = float(input(f"{Fore.GREEN}Enter movie rating (0-10):{Fore.RESET} "))
             year = int(input(f"{Fore.GREEN}Enter release year:{Fore.RESET} "))
             if 0 <= rating <= 10 and 1800 <= year <= 2100:
-                movies[title] = {"title": title, "rating": rating, "year": year}
+                movie_storage.add_movie(title, year, rating)
                 print(f"'{title}' ({year}) has been added with a rating of {rating}")
                 return
-            print(f"{Fore.RED}Invalid rating or year. Please try again.{Fore.RESET}")
+            else:
+                print(f"{Fore.RED}Invalid rating or year. Please try again.{Fore.RESET}")
         except ValueError:
             print(f"{Fore.RED}Please enter valid numbers for rating and year.{Fore.RESET}")
 
 
-def delete_movie(movies):
-    """Delete a movie from the database."""
-    del_movie = input(f"{Fore.GREEN}Enter movie name to delete:{Fore.RESET} ")
-    if del_movie in movies:
-        del movies[del_movie]
-        print(f"'{del_movie}' has been deleted from the movie list.")
-    else:
-        print(f"{Fore.RED}Error: Movie '{del_movie}' doesn't exist in the list.{Fore.RESET}")
-
-
-def update_movie(movies):
-    """Update the rating of an existing movie in the database."""
-    title = input(f"{Fore.GREEN}Enter movie title:{Fore.RESET} ")
-    if title in movies:
-        while True:
-            try:
-                rating = float(input(f"{Fore.GREEN}Enter new movie rating (0-10):{Fore.RESET} "))
-                if 0 <= rating <= 10:
-                    movies[title]["rating"] = rating
-                    print(f"'{title}' has been updated with a new rating of {rating}")
-                    return
-                print(f"{Fore.RED}Rating must be between 0 and 10.{Fore.RESET}")
-            except ValueError:
-                print(f"{Fore.RED}Please enter a valid number for the rating.{Fore.RESET}")
+def delete_movie():
+    title = input(f"{Fore.GREEN}Enter movie name to delete:{Fore.RESET} ")
+    if movie_storage.delete_movie(title):
+        print(f"'{title}' has been deleted from the movie list.")
     else:
         print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
 
+
+def update_movie():
+    title = input(f"{Fore.GREEN}Enter movie title:{Fore.RESET} ")
+    while True:
+        try:
+            rating = float(input(f"{Fore.GREEN}Enter new movie rating (0-10):{Fore.RESET} "))
+            if 0 <= rating <= 10:
+                if movie_storage.update_movie(title, rating):
+                    print(f"'{title}' has been updated with a new rating of {rating}")
+                    return
+                else:
+                    print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
+                    return
+            else:
+                print(f"{Fore.RED}Rating must be between 0 and 10.{Fore.RESET}")
+        except ValueError:
+            print(f"{Fore.RED}Please enter a valid number for the rating.{Fore.RESET}")
 
 def stats(movies):
     """Calculate and display various statistics about the movies."""
@@ -184,61 +182,6 @@ def exit_program(movies):
 
 # Main function to run the movie database application.
 def main():
-    """Main function to run the movie database application."""
-    movies = {
-        "The Shawshank Redemption": {
-            "title": "The Shawshank Redemption",
-            "rating": 9.5,
-            "year": 1994
-        },
-        "Pulp Fiction": {
-            "title": "Pulp Fiction",
-            "rating": 8.8,
-            "year": 1994
-        },
-        "The Room": {
-            "title": "The Room",
-            "rating": 3.6,
-            "year": 2003
-        },
-        "The Godfather": {
-            "title": "The Godfather",
-            "rating": 9.2,
-            "year": 1972
-        },
-        "The Godfather: Part II": {
-            "title": "The Godfather: Part II",
-            "rating": 9.0,
-            "year": 1974
-        },
-        "The Dark Knight": {
-            "title": "The Dark Knight",
-            "rating": 9.0,
-            "year": 2008
-        },
-        "12 Angry Men": {
-            "title": "12 Angry Men",
-            "rating": 8.9,
-            "year": 1957
-        },
-        "Everything Everywhere All At Once": {
-            "title": "Everything Everywhere All At Once",
-            "rating": 8.9,
-            "year": 2022
-        },
-        "Forrest Gump": {
-            "title": "Forrest Gump",
-            "rating": 8.8,
-            "year": 1994
-        },
-        "Star Wars: Episode V": {
-            "title": "Star Wars: Episode V - The Empire Strikes Back",
-            "rating": 8.7,
-            "year": 1980
-        }
-    }
-
-    # Dictionary mapping menu choices to functions
     menu_option_choice = {
         0: exit_program,
         1: list_movies,
@@ -251,24 +194,26 @@ def main():
         8: movies_sorted_by_rating,
         9: create_rating_histogram
     }
-# Menu is supposed to be displayed all the time so we are using a while Loop to do that
+
     while True:
         display_menu()
         try:
             choice = int(input("Enter choice (0-9): "))
             if choice in menu_option_choice:
                 if choice == 0:
-                    exit_program(movies)
-                    break
-                menu_option_choice[choice](movies)
+                    if exit_program():
+                        break
+                else:
+                    menu_option_choice[choice]()
             else:
                 print("Invalid choice. Please enter a number between 0 and 9.")
-
         except ValueError:
             print(f"{Fore.RED}Please enter a valid number.{Fore.RESET}")
 
-        if input("Do you want to continue? (y/n): ").lower() != 'y': # Asking User if he want´s to continue giving input after every command
+        if input("Do you want to continue? (y/n): ").lower() != 'y':
             break
+
+    print("Program ended.")
 
 if __name__ == "__main__":
     main()
