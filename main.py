@@ -43,6 +43,7 @@ init() # Initialize colorama for cross-platform colored terminal text
 # Define menu items for the main menu
 menu_items = [
     "Menu:",
+    "0. Exit",
     "1. List movies",
     "2. Add movie",
     "3. Delete movie",
@@ -209,6 +210,13 @@ def create_rating_histogram(movies):
     plt.close()
     print(f"Histogram saved as {filename}")
 
+
+def exit_program(movies):
+    print("Bye!")
+    return True
+
+
+
 # Main function to run the movie database application.
 def main():
     # Dictionary to store the movies and the rating
@@ -227,6 +235,7 @@ def main():
 
     # Dictionary mapping menu choices to functions
     menu_option_choice = {
+        0: exit_program,
         1: list_movies,
         2: add_movie,
         3: delete_movie,
@@ -241,11 +250,14 @@ def main():
     while True:
         display_menu()
         try:
-            choice = int(input("Enter choice (1-9): "))
+            choice = int(input("Enter choice (0-9): "))
             if choice in menu_option_choice:
+                if choice == 0:
+                    exit_program(movies)
+                    break
                 menu_option_choice[choice](movies)
             else:
-                print("Invalid choice. Please enter a number between 1 and 9.")
+                print("Invalid choice. Please enter a number between 0 and 9.")
 
         except ValueError:
             print(f"{Fore.RED}Please enter a valid number.{Fore.RESET}")
