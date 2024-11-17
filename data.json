@@ -68,5 +68,9 @@
     "Test 3": {
         "year": 2099,
         "rating": 5.0
+    },
+    "Berserk": {
+        "year": 1995,
+        "rating": 8.8
     }
 }
