@@ -64,5 +64,9 @@
     "test": {
         "year": 1999,
         "rating": 5.0
+    },
+    "Test 3": {
+        "year": 2099,
+        "rating": 5.0
     }
 }
