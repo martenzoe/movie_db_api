@@ -1,8 +1,11 @@
-import movie_storage
 import random
+
 import matplotlib.pyplot as plt
+from colorama import Fore
 from thefuzz import fuzz
-from colorama import Fore, init
+
+import movie_storage
+
 
 def stats():
     """
@@ -53,6 +56,7 @@ def stats():
         if movie["rating"] == min_rating:
             print(f"- {title} ({movie['year']}): {movie['rating']}")
 
+
 def random_movie_and_rating():
     """
     Select and display a random movie with its rating from the database.
@@ -74,6 +78,7 @@ def random_movie_and_rating():
     rating = movies[movie]["rating"]
     print(f"Random movie: {movie}, Rating: {rating}")
 
+
 def search_movie():
     """
     Search for a movie using partial name matching.
@@ -89,7 +94,8 @@ def search_movie():
         None: This function prints the search results to the console.
     """
     while True:
-        search_input = input(f"{Fore.GREEN}Enter part of the movie name (or type 'cancel' to go back):{Fore.RESET} ").strip()
+        search_input = input(
+            f"{Fore.GREEN}Enter part of the movie name (or type 'cancel' to go back):{Fore.RESET} ").strip()
         if search_input.lower() == 'cancel':
             return
         if not search_input:
@@ -120,6 +126,7 @@ def search_movie():
 
         break
 
+
 def movies_sorted_by_rating():
     """
     Display all movies sorted by their ratings in descending order.
@@ -141,6 +148,7 @@ def movies_sorted_by_rating():
     print("Movies sorted by rating (highest to lowest):")
     for title, movie in sorted_movies:
         print(f"{title} ({movie['year']}): {movie['rating']}")
+
 
 def create_rating_histogram():
     """

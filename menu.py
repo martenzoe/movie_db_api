@@ -17,6 +17,7 @@ MENU_ITEMS = [
     "9. Create Rating Histogram",
 ]
 
+
 def display_menu():
     """
     Display the main menu of the application.

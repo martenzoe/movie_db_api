@@ -2,6 +2,7 @@ import json
 
 JSON_FILE = "data.json"
 
+
 def get_movies():
     """
     Retrieve the movies from the JSON file.
@@ -22,6 +23,7 @@ def get_movies():
     except FileNotFoundError:
         return {}
 
+
 def save_movies(movies):
     """
     Save the movies to the JSON file.
@@ -36,6 +38,7 @@ def save_movies(movies):
     """
     with open(JSON_FILE, 'w') as file:
         json.dump(movies, file, indent=4)
+
 
 def add_movie(title, year, rating):
     """
@@ -67,6 +70,7 @@ def add_movie(title, year, rating):
     save_movies(movies)
     return True  # Successful addition or update
 
+
 def delete_movie(title):
     """
     Delete a movie from the movies database.
@@ -92,6 +96,7 @@ def delete_movie(title):
     else:
         print(f"Error: Movie '{title}' doesn't exist in the list.")
         return False  # Movie not found
+
 
 def update_movie(title, rating):
     """

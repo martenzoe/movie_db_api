@@ -18,6 +18,12 @@ Key Features:
 - Persistent movie storage
 - Fuzzy search functionality
 - Basic movie analytics
+- Unit testing to catch common errors and verify functionality
+
+Error Handling:
+The application includes robust error handling using try-except blocks to manage invalid user inputs effectively.
+Input validations are performed when adding or updating movies to ensure that titles are not empty,
+ratings are within the range of 0 to 10, and years are between 1800 and 2100.
 
 Dependencies:
 - movie_storage: Handles movie data persistence
@@ -26,10 +32,13 @@ Dependencies:
 - colorama: Enables colored terminal output
 
 Author: Marten Zöllner
-Date: 17.11.2024
+Date: 25.10.2024
 Version: 2.0
 """
 
+from colorama import Fore, init
+
+from menu import display_menu
 from movie_analytics import (
     create_rating_histogram,
     movies_sorted_by_rating,
@@ -43,9 +52,6 @@ from movie_operations import (
     delete_movie,
     update_movie
 )
-from menu import display_menu
-
-from colorama import Fore, init
 
 init()  # Initialize colorama for cross-platform colored terminal text
 

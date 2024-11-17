@@ -1,5 +1,7 @@
-import movie_storage
 from colorama import Fore
+
+import movie_storage
+
 
 def list_movies():
     """
@@ -22,6 +24,7 @@ def list_movies():
     print("\nMovie List:")
     for title, movie in movies.items():
         print(f"{title} ({movie['year']}): {movie['rating']}")
+
 
 def add_movie():
     """
@@ -57,6 +60,7 @@ def add_movie():
             except ValueError:
                 print(f"{Fore.RED}Please enter valid numbers for rating and year.{Fore.RESET}")
 
+
 def delete_movie():
     """
     Delete a movie from the database.
@@ -85,6 +89,7 @@ def delete_movie():
             print(f"'{title}' has been deleted from the movie list.")
         else:
             print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
+
 
 def update_movie():
     """
