@@ -2,6 +2,19 @@ import movie_storage
 from colorama import Fore
 
 def list_movies():
+    """
+    List all movies in the database.
+
+    This function retrieves the list of movies from the database and displays
+    each movie's title, year, and rating. If no movies are found, it informs
+    the user that the database is empty.
+
+    Args:
+        None
+
+    Returns:
+        None: Prints the list of movies or an empty database message to the console.
+    """
     movies = movie_storage.get_movies()
     if not movies:
         print(f"{Fore.RED}No movies found in the database.{Fore.RESET}")
@@ -11,6 +24,19 @@ def list_movies():
         print(f"{title} ({movie['year']}): {movie['rating']}")
 
 def add_movie():
+    """
+    Add a new movie to the database.
+
+    This function prompts the user for a movie title, rating, and release year.
+    It validates the input and adds the movie to the database if all inputs are valid.
+    The user can cancel the operation at any time.
+
+    Args:
+        None
+
+    Returns:
+        None: Adds a movie to the database or returns to the main menu.
+    """
     while True:
         title = input(f"{Fore.GREEN}Enter new movie title (or type 'cancel' to go back):{Fore.RESET} ").strip()
         if title.lower() == 'cancel':
@@ -32,6 +58,19 @@ def add_movie():
                 print(f"{Fore.RED}Please enter valid numbers for rating and year.{Fore.RESET}")
 
 def delete_movie():
+    """
+    Delete a movie from the database.
+
+    This function prompts the user for a movie title to delete. It validates
+    the input and removes the movie from the database if it exists. The user can
+    cancel the operation at any time.
+
+    Args:
+        None
+
+    Returns:
+        None: Deletes a movie from the database or returns to the main menu.
+    """
     while True:
         title = input(f"{Fore.GREEN}Enter movie name to delete (or type 'cancel' to go back):{Fore.RESET} ").strip()
         if title.lower() == 'cancel':
@@ -48,6 +87,19 @@ def delete_movie():
             print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
 
 def update_movie():
+    """
+    Update an existing movie's rating in the database.
+
+    This function prompts the user for a movie title and new rating. It validates
+    the input and updates the movie's rating if it exists in the database. The user
+    can cancel the operation at any time.
+
+    Args:
+        None
+
+    Returns:
+        None: Updates a movie's rating or returns to the main menu.
+    """
     while True:
         title = input(f"{Fore.GREEN}Enter movie title to update (or type 'cancel' to go back):{Fore.RESET} ").strip()
         if title.lower() == 'cancel':

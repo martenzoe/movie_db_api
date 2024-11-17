@@ -1,18 +1,48 @@
 """
 Python Movie Database Application
 
-This module implements a movie database management system.
-It allows users to manage a collection of movies, including adding,
-deleting, updating, and viewing movie information.
+This module implements a comprehensive movie database management system
+that allows users to:
+- List existing movies
+- Add new movies
+- Delete movies
+- Update movie ratings
+- View movie statistics
+- Perform random movie selection
+- Search for movies
+- Sort movies by rating
+- Create rating histograms
 
-Usage: python3 movies.py
+Key Features:
+- Interactive command-line interface
+- Persistent movie storage
+- Fuzzy search functionality
+- Basic movie analytics
+
+Dependencies:
+- movie_storage: Handles movie data persistence
+- thefuzz: Provides fuzzy string matching
+- matplotlib: Generates rating histograms
+- colorama: Enables colored terminal output
 
 Author: Marten Zöllner
-Date: 25.10.2024
-Version: 1.0
+Date: 17.11.2024
+Version: 2.0
 """
-from movie_analytics import create_rating_histogram, movies_sorted_by_rating, search_movie, random_movie_and_rating, stats
-from movie_operations import list_movies, add_movie, delete_movie, update_movie
+
+from movie_analytics import (
+    create_rating_histogram,
+    movies_sorted_by_rating,
+    search_movie,
+    random_movie_and_rating,
+    stats
+)
+from movie_operations import (
+    list_movies,
+    add_movie,
+    delete_movie,
+    update_movie
+)
 from menu import display_menu
 
 from colorama import Fore, init
@@ -21,13 +51,41 @@ init()  # Initialize colorama for cross-platform colored terminal text
 
 
 def exit_program():
-    """Exit the program."""
+    """
+    Gracefully exit the movie database application.
+
+    Prints a farewell message and signals the program to terminate.
+
+    Returns:
+        bool: Always returns True to indicate program termination.
+    """
     print("Bye!")
     return True
 
 
-# Main function to run the movie database application.
 def main():
+    """
+    Main entry point for the movie database application.
+
+    Manages the primary program loop, handling user interactions and menu navigation.
+    Provides a menu-driven interface for various movie database operations.
+
+    The function:
+    - Displays the menu
+    - Captures user input
+    - Validates and executes selected operations
+    - Handles potential input errors
+    - Offers continuous interaction until user chooses to exit
+
+    Args:
+        None
+
+    Returns:
+        None: Runs the application until user decides to exit.
+
+    Raises:
+        ValueError: If user enters a non-numeric menu choice.
+    """
     menu_option_choice = {
         0: exit_program,
         1: list_movies,

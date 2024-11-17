@@ -18,7 +18,18 @@ MENU_ITEMS = [
 ]
 
 def display_menu():
-    """Display the main menu of the application."""
+    """
+    Display the main menu of the application.
+
+    This function prints out all available options for users to interact with
+    within the application.
+
+    Args:
+        None
+
+    Returns:
+        None: This function prints menu items to the console.
+    """
     print("********** My Movies Database **********")
     print()
     print(f"{Fore.BLUE}\n".join(MENU_ITEMS))

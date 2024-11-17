@@ -4,9 +4,24 @@ import matplotlib.pyplot as plt
 from thefuzz import fuzz
 from colorama import Fore, init
 
-
 def stats():
-    """Calculate and display various statistics about the movies."""
+    """
+    Calculate and display various statistics about the movies in the database.
+
+    This function computes and prints:
+    - Total number of movies
+    - Average rating
+    - Best rated movie(s)
+    - Worst rated movie(s)
+
+    If the database is empty, it prints a message indicating so.
+
+    Args:
+        None
+
+    Returns:
+        None: This function prints the statistics to the console.
+    """
     movies = movie_storage.get_movies()
 
     if not movies:
@@ -38,20 +53,45 @@ def stats():
         if movie["rating"] == min_rating:
             print(f"- {title} ({movie['year']}): {movie['rating']}")
 
-
 def random_movie_and_rating():
+    """
+    Select and display a random movie with its rating from the database.
+
+    Args:
+        None
+
+    Returns:
+        None: This function prints the selected movie and its rating to the console.
+
+    Raises:
+        IndexError: If the movie database is empty.
+    """
     movies = movie_storage.get_movies()
+    if not movies:
+        print("The database is empty.")
+        return
     movie = random.choice(list(movies.keys()))
     rating = movies[movie]["rating"]
     print(f"Random movie: {movie}, Rating: {rating}")
 
-
 def search_movie():
-    """Search for a movie using partial name matching."""
+    """
+    Search for a movie using partial name matching.
+
+    This function prompts the user to enter a part of a movie title,
+    then searches the database for matches. It displays exact matches
+    and similar matches based on fuzzy string matching.
+
+    Args:
+        None
+
+    Returns:
+        None: This function prints the search results to the console.
+    """
     while True:
         search_input = input(f"{Fore.GREEN}Enter part of the movie name (or type 'cancel' to go back):{Fore.RESET} ").strip()
         if search_input.lower() == 'cancel':
-            return  # Möglichkeit zum Abbrechen
+            return
         if not search_input:
             print(f"{Fore.RED}Input cannot be empty. Please try again.{Fore.RESET}")
             continue
@@ -78,29 +118,51 @@ def search_movie():
         else:
             print(f"{Fore.RED}No movies found matching or similar to your search.{Fore.RESET}")
 
-        break  # Beenden Sie die Schleife nach einer erfolgreichen Suche
-
+        break
 
 def movies_sorted_by_rating():
-    """Display all movies sorted by their ratings in descending order."""
+    """
+    Display all movies sorted by their ratings in descending order.
+
+    Args:
+        None
+
+    Returns:
+        None: This function prints the sorted list of movies to the console.
+    """
     movies = movie_storage.get_movies()
 
     if not movies:
         print("The Database is empty.")
         return
 
-    # Sortiere die Filme nach ihrer Bewertung (rating)
     sorted_movies = sorted(movies.items(), key=lambda x: x[1]["rating"], reverse=True)
 
     print("Movies sorted by rating (highest to lowest):")
     for title, movie in sorted_movies:
         print(f"{title} ({movie['year']}): {movie['rating']}")
 
-
-
 def create_rating_histogram():
-    """Create and save a histogram of movie ratings."""
+    """
+    Create and save a histogram of movie ratings.
+
+    This function generates a histogram of movie ratings and saves it as an image file.
+    The user is prompted to enter a filename for the saved image.
+
+    Args:
+        None
+
+    Returns:
+        None: This function saves the histogram as an image file and prints a confirmation message.
+
+    Raises:
+        ValueError: If there are no movies in the database.
+    """
     movies = movie_storage.get_movies()
+    if not movies:
+        print("The database is empty. Cannot create histogram.")
+        return
+
     ratings = [movie["rating"] for movie in movies.values()]
     plt.figure(figsize=(10, 6))
     plt.hist(ratings, bins=10, range=(0, 10), edgecolor="black")
