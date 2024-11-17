@@ -257,7 +257,11 @@ def main():
     while True:
         display_menu()
         try:
-            choice = int(input("Enter choice (0-9): "))
+            choice = input("Enter choice (0-9): ").strip()
+            if not choice.isdigit():
+                raise ValueError("Not a number")
+
+            choice = int(choice)
             if choice in menu_option_choice:
                 if choice == 0:
                     if exit_program():
@@ -265,11 +269,11 @@ def main():
                 else:
                     menu_option_choice[choice]()
             else:
-                print("Invalid choice. Please enter a number between 0 and 9.")
+                print(f"{Fore.YELLOW}Invalid choice. Please enter a number between 0 and 9.{Fore.RESET}")
         except ValueError:
             print(f"{Fore.RED}Please enter a valid number.{Fore.RESET}")
 
-        if input("Do you want to continue? (y/n): ").lower() != 'y':
+        if input("Do you want to continue? (y/n): ").lower().strip() != 'y':
             break
 
     print("Program ended.")

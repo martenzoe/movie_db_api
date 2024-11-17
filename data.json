@@ -60,5 +60,9 @@
     "Merlin 2": {
         "year": 1999,
         "rating": 7.0
+    },
+    "test": {
+        "year": 1999,
+        "rating": 5.0
     }
 }
