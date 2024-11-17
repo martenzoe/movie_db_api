@@ -45,84 +45,119 @@ def display_menu():
 
 def list_movies():
     movies = movie_storage.get_movies()
+    if not movies:
+        print(f"{Fore.RED}No movies found in the database.{Fore.RESET}")
+        return
     print("\nMovie List:")
     for title, movie in movies.items():
         print(f"{title} ({movie['year']}): {movie['rating']}")
 
 
 def add_movie():
-    title = input(f"{Fore.GREEN}Enter new movie title:{Fore.RESET} ")
     while True:
-        try:
-            rating = float(input(f"{Fore.GREEN}Enter movie rating (0-10):{Fore.RESET} "))
-            year = int(input(f"{Fore.GREEN}Enter release year:{Fore.RESET} "))
-            if 0 <= rating <= 10 and 1800 <= year <= 2100:
-                movie_storage.add_movie(title, year, rating)  # Hier wird die Funktion aufgerufen
-                print(f"'{title}' ({year}) has been added with a rating of {rating}")
-                return
-            else:
-                print(f"{Fore.RED}Invalid rating or year. Please try again.{Fore.RESET}")
-        except ValueError:
-            print(f"{Fore.RED}Please enter valid numbers for rating and year.{Fore.RESET}")
+        title = input(f"{Fore.GREEN}Enter new movie title (or type 'cancel' to go back):{Fore.RESET} ").strip()
+        if title.lower() == 'cancel':
+            return  # Möglichkeit zum Abbrechen
+        if not title:
+            print(f"{Fore.RED}Title cannot be empty. Please try again.{Fore.RESET}")
+            continue
+
+        while True:
+            try:
+                rating = float(input(f"{Fore.GREEN}Enter movie rating (0-10):{Fore.RESET} "))
+                year = int(input(f"{Fore.GREEN}Enter release year (1800-2100):{Fore.RESET} "))
+                if 0 <= rating <= 10 and 1800 <= year <= 2100:
+                    movie_storage.add_movie(title, year, rating)
+                    print(f"'{title}' ({year}) has been added with a rating of {rating}")
+                    return
+                else:
+                    print(f"{Fore.RED}Invalid rating or year. Please try again.{Fore.RESET}")
+            except ValueError:
+                print(f"{Fore.RED}Please enter valid numbers for rating and year.{Fore.RESET}")
 
 
 def delete_movie():
     """Delete a movie from the database."""
-    title = input(f"{Fore.GREEN}Enter movie name to delete:{Fore.RESET} ")
-    movie_storage.delete_movie(title)  # Aufruf der delete_movie Funktion aus movie_storage
+    while True:
+        title = input(f"{Fore.GREEN}Enter movie name to delete (or type 'cancel' to go back):{Fore.RESET} ").strip()
+
+        if title.lower() == 'cancel':
+            return  # Möglichkeit zum Abbrechen
+
+        if not title:
+            print(f"{Fore.RED}Title cannot be empty. Please try again.{Fore.RESET}")
+            continue
+
+        # Überprüfen, ob der Titel nur aus Zahlen besteht
+        if title.isdigit():
+            print(f"{Fore.RED}Invalid input: Title cannot be a number. Please enter a valid movie title.{Fore.RESET}")
+            continue
+
+        # Löschen des Films
+        if movie_storage.delete_movie(title):  # Modifizieren Sie die Funktion, um ein Ergebnis zurückzugeben
+            print(f"'{title}' has been deleted from the movie list.")
+        else:
+            print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
 
 
 def update_movie():
-    """Update the rating of an existing movie in the database."""
-    title = input(f"{Fore.GREEN}Enter movie title:{Fore.RESET} ")
+    while True:
+        title = input(f"{Fore.GREEN}Enter movie title to update (or type 'cancel' to go back):{Fore.RESET} ").strip()
+        if title.lower() == 'cancel':
+            return  # Möglichkeit zum Abbrechen
+        if not title:
+            print(f"{Fore.RED}Title cannot be empty. Please try again.{Fore.RESET}")
+            continue
 
-    movies = movie_storage.get_movies()  # Filme abrufen
-
-    if title in movies:
-        while True:
-            try:
-                rating = float(input(f"{Fore.GREEN}Enter new movie rating (0-10):{Fore.RESET} "))
-                if 0 <= rating <= 10:
-                    movie_storage.update_movie(title, rating)  # Aufruf der update_movie Funktion aus movie_storage
-                    print(f"'{title}' has been updated with a new rating of {rating}")
-                    return
-                else:
-                    print(f"{Fore.RED}Rating must be between 0 and 10.{Fore.RESET}")
-            except ValueError:
-                print(f"{Fore.RED}Please enter a valid number for the rating.{Fore.RESET}")
-    else:
-        print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
+        movies = movie_storage.get_movies()
+        if title in movies:
+            while True:
+                try:
+                    rating = float(input(f"{Fore.GREEN}Enter new movie rating (0-10):{Fore.RESET} "))
+                    if 0 <= rating <= 10:
+                        movie_storage.update_movie(title, rating)
+                        print(f"'{title}' has been updated with a new rating of {rating}")
+                        return
+                    else:
+                        print(f"{Fore.RED}Rating must be between 0 and 10.{Fore.RESET}")
+                except ValueError:
+                    print(f"{Fore.RED}Please enter a valid number for the rating.{Fore.RESET}")
+        else:
+            print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
 
 
 def stats():
     """Calculate and display various statistics about the movies."""
     movies = movie_storage.get_movies()
+
     if not movies:
         print("The Database is empty.")
         return
 
     ratings = [movie["rating"] for movie in movies.values()]
     num_movies = len(movies)
+
     average_rating = sum(ratings) / num_movies
     sorted_ratings = sorted(ratings)
+
     median_rating = (sorted_ratings[num_movies // 2 - 1] +
-                     sorted_ratings[num_movies // 2]) / 2
+                     sorted_ratings[num_movies // 2]) / 2 if num_movies % 2 == 0 else sorted_ratings[num_movies // 2]
+
     max_rating = max(ratings)
     min_rating = min(ratings)
 
     print(f"Number of movies: {num_movies}")
     print(f"Average rating: {average_rating:.2f}")
-    print(f"Median rating: {median_rating:.2f}")
 
     print("\nBest movie(s):")
-    for movie in movies.values():
+    for title, movie in movies.items():
         if movie["rating"] == max_rating:
-            print(f"- {movie['title']} ({movie['year']}): {movie['rating']}")
+            print(f"- {title} ({movie['year']}): {movie['rating']}")
 
     print("\nWorst movie(s):")
-    for movie in movies.values():
+    for title, movie in movies.items():
         if movie["rating"] == min_rating:
-            print(f"- {movie['title']} ({movie['year']}): {movie['rating']}")
+            print(f"- {title} ({movie['year']}): {movie['rating']}")
 
 
 def random_movie_and_rating():
@@ -134,28 +169,37 @@ def random_movie_and_rating():
 
 def search_movie():
     """Search for a movie using partial name matching."""
-    movies = movie_storage.get_movies()
-    search_input = input(f"{Fore.GREEN}Enter part of the movie name:{Fore.RESET} ")
-    found_movies = []
-    similar_movies = []
+    while True:
+        search_input = input(f"{Fore.GREEN}Enter part of the movie name (or type 'cancel' to go back):{Fore.RESET} ").strip()
+        if search_input.lower() == 'cancel':
+            return  # Möglichkeit zum Abbrechen
+        if not search_input:
+            print(f"{Fore.RED}Input cannot be empty. Please try again.{Fore.RESET}")
+            continue
 
-    for title, movie in movies.items():
-        similarity = fuzz.ratio(search_input.lower(), title.lower())
-        if similarity == 100:
-            found_movies.append(movie)
-        elif similarity > 60:
-            similar_movies.append((movie, similarity))
+        movies = movie_storage.get_movies()
+        found_movies = []
+        similar_movies = []
 
-    if found_movies:
-        print("\nExact matches:")
-        for movie in found_movies:
-            print(f"{movie['title']} ({movie['year']}): {movie['rating']}")
-    elif similar_movies:
-        print("\nNo exact matches found. Did you mean:")
-        for movie, similarity in sorted(similar_movies, key=lambda x: x[1], reverse=True):
-            print(f"{movie['title']} ({movie['year']}): {movie['rating']} (Similarity: {similarity}%)")
-    else:
-        print(f"{Fore.RED}No movies found matching or similar to your search.{Fore.RESET}")
+        for title, movie in movies.items():
+            similarity = fuzz.ratio(search_input.lower(), title.lower())
+            if similarity == 100:
+                found_movies.append((title, movie))
+            elif similarity > 60:
+                similar_movies.append((title, movie, similarity))
+
+        if found_movies:
+            print("\nExact matches:")
+            for title, movie in found_movies:
+                print(f"{title} ({movie['year']}): {movie['rating']}")
+        elif similar_movies:
+            print("\nNo exact matches found. Did you mean:")
+            for title, movie, similarity in sorted(similar_movies, key=lambda x: x[2], reverse=True):
+                print(f"{title} ({movie['year']}): {movie['rating']} (Similarity: {similarity}%)")
+        else:
+            print(f"{Fore.RED}No movies found matching or similar to your search.{Fore.RESET}")
+
+        break  # Beenden Sie die Schleife nach einer erfolgreichen Suche
 
 
 def movies_sorted_by_rating():

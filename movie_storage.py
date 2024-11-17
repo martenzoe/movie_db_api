@@ -2,14 +2,9 @@ import json
 
 JSON_FILE = "data.json"
 
-def get_movies():
-    """
-    Returns a dictionary of dictionaries that
-    contains the movies information in the database.
 
-    The function loads the information from the JSON
-    file and returns the data.
-    """
+def get_movies():
+    """Returns a dictionary of dictionaries that contains the movies information."""
     try:
         with open(JSON_FILE, 'r') as file:
             return json.load(file)
@@ -18,46 +13,57 @@ def get_movies():
 
 
 def save_movies(movies):
-    """
-    Gets all your movies as an argument and saves them to the JSON file.
-    """
+    """Saves movies to the JSON file."""
     with open(JSON_FILE, 'w') as file:
         json.dump(movies, file, indent=4)
 
 
 def add_movie(title, year, rating):
-    """
-    Adds a movie to the movies database.
-    Loads the information from the JSON file, add the movie,
-    and saves it. The function doesn't need to validate the input.
-    """
+    """Adds a movie to the movies database."""
+    # Überprüfen auf ungültige Eingaben
+    if not title or rating < 0 or rating > 10 or year < 1800 or year > 2100:
+        return False  # Ungültige Eingabe
+
     movies = get_movies()
-    movies[title] = {"year": year, "rating": rating}
+
+    # Wenn der Film bereits existiert, aktualisieren wir die Bewertung
+    if title in movies:
+        movies[title]["rating"] = rating
+    else:
+        movies[title] = {"year": year, "rating": rating}
+
     save_movies(movies)
+    return True  # Erfolgreiches Hinzufügen oder Aktualisieren
 
 
 def delete_movie(title):
-    """
-    Deletes a movie from the movies database.
-    Loads the information from the JSON file, deletes the movie,
-    and saves it. The function doesn't need to validate the input.
-    """
+    """Deletes a movie from the movies database."""
+    if not title:  # Überprüfen auf leeren Titel
+        return False
+
     movies = get_movies()
+
     if title in movies:
         del movies[title]
         save_movies(movies)
         print(f"'{title}' has been deleted from the movie list.")
+        return True  # Erfolgreiches Löschen
     else:
-        print(f"{Fore.RED}Error: Movie '{title}' doesn't exist in the list.{Fore.RESET}")
+        print(f"Error: Movie '{title}' doesn't exist in the list.")
+        return False  # Film nicht gefunden
 
 
 def update_movie(title, rating):
-    """
-    Updates a movie from the movies database.
-    Loads the information from the JSON file, updates the movie,
-    and saves it. The function doesn't need to validate the input.
-    """
+    """Updates a movie's rating in the movies database."""
+    if not title or rating < 0 or rating > 10:  # Überprüfen auf ungültige Eingaben
+        return False
+
     movies = get_movies()
+
     if title in movies:
         movies[title]["rating"] = rating
         save_movies(movies)
+        return True  # Erfolgreiches Aktualisieren
+    else:
+        print(f"Error: Movie '{title}' doesn't exist in the list.")
+        return False  # Film nicht gefunden

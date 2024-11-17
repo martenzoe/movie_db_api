@@ -54,7 +54,11 @@
         "rating": 9.0
     },
     "The Garden": {
-        "year": 1988,
-        "rating": 2.0
+        "year": 1999,
+        "rating": 8.0
+    },
+    "Merlin 2": {
+        "year": 1999,
+        "rating": 7.0
     }
 }
