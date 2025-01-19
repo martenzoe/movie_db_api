@@ -86,19 +86,19 @@ class MovieApp:
 
     @staticmethod
     def _create_html_content(movies: Dict[str, Dict[str, Any]]) -> str:
-        """Create HTML content for the movie website."""
+        """Erstelle HTML-Inhalt für die Film-Website."""
         html_template = """
         <html>
         <head>
-            <title>My Movie App</title>
+            <title>Meine Film-App</title>
             <style>
-                body { font-family: Arial, sans-serif; }
-                .movie { margin-bottom: 20px; }
-                img { max-width: 200px; height: auto; }
+                body {{ font-family: Arial, sans-serif; }}
+                .movie {{ margin-bottom: 20px; }}
+                img {{ max-width: 200px; height: auto; }}
             </style>
         </head>
         <body>
-            <h1>My Movie Collection</h1>
+            <h1>Meine Filmsammlung</h1>
             {movie_entries}
         </body>
         </html>
@@ -107,8 +107,8 @@ class MovieApp:
             f"""
             <div class="movie">
                 <h2>{title}</h2>
-                <p>Year: {details['year']}</p>
-                <p>Rating: {details['rating']}</p>
+                <p>Jahr: {details['year']}</p>
+                <p>Bewertung: {details['rating']}</p>
                 <img src="{details.get('poster', '')}" alt="{title} Poster">
             </div>
             """
