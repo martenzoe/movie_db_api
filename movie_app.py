@@ -26,13 +26,16 @@ class MovieApp:
         movie_data = self._fetch_movie_data(title)
 
         if movie_data:
-            self._storage.add_movie(
-                movie_data['Title'],
-                int(movie_data['Year']),
-                float(movie_data['imdbRating']),
-                movie_data['Poster']
-            )
-            print(f"Movie '{movie_data['Title']}' added successfully.")
+            try:
+                self._storage.add_movie(
+                    movie_data['Title'],
+                    int(movie_data['Year']),
+                    float(movie_data['imdbRating']),
+                    movie_data['Poster']
+                )
+                print(f"Movie '{movie_data['Title']}' added successfully.")
+            except TypeError as e:
+                print(f"Error adding movie: {e}")
         else:
             print("Movie could not be found.")
 
@@ -50,19 +53,27 @@ class MovieApp:
     def _command_delete_movie(self) -> None:
         """Delete a movie from the database."""
         title = input("Enter the title of the movie to delete: ")
-        if self._storage.delete_movie(title):
-            print(f"Movie '{title}' deleted successfully.")
-        else:
-            print(f"Movie '{title}' not found.")
+        try:
+            if self._storage.delete_movie(title):
+                print(f"Movie '{title}' deleted successfully.")
+            else:
+                print(f"Movie '{title}' not found.")
+        except TypeError as e:
+            print(f"Error deleting movie: {e}")
 
     def _command_update_movie(self) -> None:
         """Update the rating of a movie in the database."""
         title = input("Enter the title of the movie to update: ")
-        rating = float(input("Enter the new rating (0-10): "))
-        if self._storage.update_movie(title, rating):
-            print(f"Movie '{title}' updated successfully.")
-        else:
-            print(f"Movie '{title}' not found.")
+        try:
+            rating = float(input("Enter the new rating (0-10): "))
+            if self._storage.update_movie(title, rating):
+                print(f"Movie '{title}' updated successfully.")
+            else:
+                print(f"Movie '{title}' not found.")
+        except ValueError:
+            print("Invalid rating. Please enter a number.")
+        except TypeError as e:
+            print(f"Error updating movie: {e}")
 
     def _command_movie_stats(self) -> None:
         """Display movie statistics."""
@@ -124,6 +135,7 @@ class MovieApp:
 
     def run(self) -> None:
         """Run the main application loop."""
+
         commands = {
             "1": ("List movies", self._command_list_movies),
             "2": ("Add movie", self._command_add_movie),
