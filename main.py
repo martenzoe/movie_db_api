@@ -1,7 +1,7 @@
 """Main entry point for the Movie Database Application."""
 
 from movie_app import MovieApp
-from storage_csv import StorageCsv
+from storage.storage_csv import StorageCsv
 
 
 def main():
@@ -11,7 +11,7 @@ def main():
     This function creates a CSV storage instance and a MovieApp instance,
     then runs the application.
     """
-    storage = StorageCsv('movies.csv')
+    storage = StorageCsv('data/movies.csv')
     movie_app = MovieApp(storage)
     movie_app.run()
 

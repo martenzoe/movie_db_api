@@ -1,7 +1,7 @@
 """Module for the main Movie Application logic."""
 
 from typing import Dict, Any
-from istorage import IStorage
+from storage.istorage import IStorage
 from omdb_api import get_movie_info
 
 class MovieApp:

@@ -2,7 +2,7 @@
 
 import json
 from typing import Dict, Any
-from istorage import IStorage
+from storage.istorage import IStorage
 
 class StorageJson(IStorage):
     """Implements JSON storage for the movie database."""

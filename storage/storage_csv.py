@@ -1,8 +1,6 @@
-"""This module provides CSV storage functionality for the movie database."""
-
 import csv
-from typing import Dict, Any
-from istorage import IStorage
+import os
+from storage.istorage import IStorage
 
 class StorageCsv(IStorage):
     """Implements CSV storage for the movie database."""
@@ -14,16 +12,23 @@ class StorageCsv(IStorage):
             file_path (str): Path to the CSV file.
         """
         self.file_path = file_path
+        self._ensure_data_directory()
 
-    def list_movies(self) -> Dict[str, Dict[str, Any]]:
+    def _ensure_data_directory(self) -> None:
+        """Ensure that the data directory exists."""
+        data_directory = os.path.dirname(self.file_path)
+        if not os.path.exists(data_directory):
+            os.makedirs(data_directory)
+
+    def list_movies(self) -> dict:
         """List all movies in the database.
 
         Returns:
-            Dict[str, Dict[str, Any]]: A dictionary of movies.
+            dict: A dictionary of movies.
         """
         movies = {}
         try:
-            with open(self.file_path, 'r', newline='', encoding='utf-8') as file:
+            with open(self.file_path, mode='r', newline='', encoding='utf-8') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
                     movies[row['title']] = {
@@ -31,9 +36,9 @@ class StorageCsv(IStorage):
                         'rating': float(row['rating']),
                         'poster': row['poster']
                     }
+            return movies
         except FileNotFoundError:
-            pass
-        return movies
+            return {}
 
     def add_movie(self, title: str, year: int, rating: float, poster: str) -> None:
         """Add a movie to the database.
@@ -76,25 +81,24 @@ class StorageCsv(IStorage):
         """
         movies = self.list_movies()
         if title in movies:
-            movies[title]['rating'] = rating
+            movies[title]["rating"] = rating
             self._save_movies(movies)
             return True
         return False
 
-    def _save_movies(self, movies: Dict[str, Dict[str, Any]]) -> None:
+    def _save_movies(self, movies: dict) -> None:
         """Save the movies to the CSV file.
 
         Args:
-            movies (Dict[str, Dict[str, Any]]): The movies to save.
+            movies (dict): The movies to save.
         """
-        fieldnames = ['title', 'year', 'rating', 'poster']
-        with open(self.file_path, 'w', newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
+        with open(self.file_path, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.DictWriter(file, fieldnames=['title', 'year', 'rating', 'poster'])
             writer.writeheader()
-            for title, data in movies.items():
+            for title, details in movies.items():
                 writer.writerow({
                     'title': title,
-                    'year': data['year'],
-                    'rating': data['rating'],
-                    'poster': data['poster']
+                    'year': details['year'],
+                    'rating': details['rating'],
+                    'poster': details['poster']
                 })

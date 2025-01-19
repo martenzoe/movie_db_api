@@ -46,6 +46,6 @@ body {
 .movie-poster {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16),
                 0 3px 6px rgba(0, 0, 0, 0.23);
-    width: 128px; /* Breite des Posters */
-    height: auto; /* Höhe automatisch anpassen */
+    width: 128px; /* Poster width */
+    height: auto; /* Poster heigth */
 }
