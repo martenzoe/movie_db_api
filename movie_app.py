@@ -80,9 +80,9 @@ class MovieApp:
         movies = self._storage.list_movies()
         html_content = self._create_html_content(movies)
 
-        with open("movie_website.html", "w", encoding='utf-8') as file:
+        with open("index.html", "w", encoding='utf-8') as file:
             file.write(html_content)
-        print("Website generated as 'movie_website.html'")
+        print("Website was generated successfully.")
 
     @staticmethod
     def _create_html_content(movies: Dict[str, Dict[str, Any]]) -> str:
@@ -137,10 +137,10 @@ class MovieApp:
             print("\n== Movie App ==")
             for key, (description, _) in commands.items():
                 print(f"{key}. {description}")
-            print("q. Quit")
+            print("0. Exit")
 
             choice = input("Enter your choice: ").lower()
-            if choice == 'q':
+            if choice == '0':  # Check for '0' to exit
                 print("Goodbye!")
                 break
             elif choice in commands:
