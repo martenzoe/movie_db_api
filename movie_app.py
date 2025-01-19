@@ -86,34 +86,40 @@ class MovieApp:
 
     @staticmethod
     def _create_html_content(movies: Dict[str, Dict[str, Any]]) -> str:
-        """Erstelle HTML-Inhalt für die Film-Website."""
+        """Generate HTML content for the Movie Website."""
         html_template = """
         <html>
         <head>
-            <title>Meine Film-App</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; }}
-                .movie {{ margin-bottom: 20px; }}
-                img {{ max-width: 200px; height: auto; }}
-            </style>
+            <title>My Movie App</title>
+            <link rel="stylesheet" href="style.css"/>
         </head>
         <body>
-            <h1>Meine Filmsammlung</h1>
-            {movie_entries}
+            <div class="list-movies-title">
+                <h1>My Movie App</h1>
+            </div>
+            <div>
+                <ol class="movie-grid">
+                    {movie_entries}
+                </ol>
+            </div>
         </body>
         </html>
         """
+
         movie_entries = "".join(
             f"""
-            <div class="movie">
-                <h2>{title}</h2>
-                <p>Jahr: {details['year']}</p>
-                <p>Bewertung: {details['rating']}</p>
-                <img src="{details.get('poster', '')}" alt="{title} Poster">
-            </div>
+            <li>
+                <div class="movie">
+                    <img class="movie-poster"
+                         src="{details.get('poster', '')}" alt="{title} Poster"/>
+                    <div class="movie-title">{title}</div>
+                    <div class="movie-year">{details['year']}</div>
+                </div>
+            </li>
             """
             for title, details in movies.items()
         )
+
         return html_template.format(movie_entries=movie_entries)
 
     def run(self) -> None:
